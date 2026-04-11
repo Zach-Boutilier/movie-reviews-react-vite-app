@@ -14,7 +14,10 @@ export interface Movie {
 export interface Review {
   id: number;
   movieId: number;
-  criticName: string;
+  title: string;
+  content: string;
   score: number;
-  body: string;
+  createdDate: string;
+  isPublished: boolean;
+  createdBy: string;
 }

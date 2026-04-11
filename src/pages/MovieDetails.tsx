@@ -58,10 +58,11 @@ export default function MovieDetails() {
                 className="border rounded-lg p-4 shadow-sm"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium"> {review.criticName} </span>
-                  <span className="text-sm text-gray-500"> ⭐ {review.score} / 5 </span>
+                  <span className="font-medium">{review.createdBy}</span>
+                  <span className="text-sm text-gray-500">⭐ {review.score} / 5</span>
                 </div>
-                <p className="text-gray-700">{review.body}</p>
+                <h3 className="font-semibold mb-1">{review.title}</h3>
+                <p className="text-gray-700">{review.content}</p>
               </div>
             ))}
           </div>
