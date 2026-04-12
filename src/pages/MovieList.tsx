@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { getMovies, getReviews } from "../api";
 import type { Movie } from "../types";
 
+const PAGE_SIZE = 10;
+
 export default function MovieList() {
   const [movies, setMovies] = useState<(Movie & { averageScore?: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     getMovies()
@@ -35,11 +38,14 @@ export default function MovieList() {
   if (loading) return <p className="text-center mt-10">Loading movies…</p>;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
+  const totalPages = Math.ceil(movies.length / PAGE_SIZE);
+  const paginated = movies.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-8 text-white">All Movies</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {movies.map((movie) => (
+        {paginated.map((movie) => (
           <Link
             key={movie.id}
             to={`/movies/${movie.id}`}
@@ -56,7 +62,7 @@ export default function MovieList() {
               </h2>
               {movie.averageScore != null ? (
                 <p className="text-sm text-gray-400">
-                  ⭐ {movie.averageScore} / 5
+                  ⭐{movie.averageScore} / 5
                 </p>
               ) : (
                 <p className="text-sm text-gray-500">
@@ -67,6 +73,38 @@ export default function MovieList() {
           </Link>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-8">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-3 py-1.5 rounded-lg text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-gray-500 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            ← Prev
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <button
+              key={n}
+              onClick={() => setPage(n)}
+              className={`px-3 py-1.5 rounded-lg text-sm border transition ${
+                n === page
+                  ? "bg-blue-600 border-blue-500 text-white"
+                  : "bg-gray-800 border-gray-700 text-gray-300 hover:border-gray-500"
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="px-3 py-1.5 rounded-lg text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-gray-500 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            Next →
+          </button>
+        </div>
+      )}
     </div>
   );
 }

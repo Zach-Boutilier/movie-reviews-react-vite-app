@@ -61,7 +61,6 @@ export default function MovieDetails() {
                   <span className="font-medium text-white">{review.createdBy}</span>
                   <span className="text-sm text-yellow-400">⭐ {review.score} / 5</span>
                 </div>
-                <h3 className="font-semibold text-gray-200 mb-1">{review.title}</h3>
                 <p className="text-gray-400 leading-relaxed">{review.content}</p>
               </div>
             ))}
