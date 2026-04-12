@@ -4,6 +4,7 @@ import MovieDetails from "./pages/MovieDetails";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
+// Root component — sets up routing and the overall page layout
 function App() {
   return (
     <BrowserRouter>
@@ -11,6 +12,7 @@ function App() {
         <Header />
 
         <main className="flex-1">
+          {/* Client-side routing: "/" shows all movies, "/movies/:id" shows a single movie's details */}
           <Routes>
             <Route path="/" element={<MovieList />} />
             <Route path="/movies/:id" element={<MovieDetails />} />

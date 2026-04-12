@@ -4,18 +4,21 @@ import { getMovie, getReviews } from "../api";
 import type { Movie, Review } from "../types";
 
 export default function MovieDetails() {
+  // Extract the movie ID from the URL parameter (e.g., /movies/3)
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch movie details and its reviews in parallel when the page loads
   useEffect(() => {
     if (!id) return;
     const movieId = Number(id);
     Promise.all([getMovie(movieId), getReviews(movieId)])
       .then(([movieData, reviewsData]) => {
         setMovie(movieData);
+        // Only show published reviews to the public
         setReviews(reviewsData.filter((r) => r.isPublished));
       })
       .catch((e) => setError(e.message))

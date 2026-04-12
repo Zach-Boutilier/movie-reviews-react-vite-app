@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getMovies, getReviews } from "../api";
 import type { Movie } from "../types";
 
+// Number of movies displayed per page
 const PAGE_SIZE = 10;
 
 export default function MovieList() {
@@ -11,12 +12,14 @@ export default function MovieList() {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
+  // On mount, fetch all movies then compute each movie's average score from published reviews
   useEffect(() => {
     getMovies()
       .then(async (moviesData) => {
         const moviesWithScores = await Promise.all(
           moviesData.map(async (movie) => {
             const reviews = await getReviews(movie.id);
+            // Only include published reviews when calculating the average
             const published = reviews.filter((r) => r.isPublished);
             const averageScore =
               published.length > 0
@@ -38,6 +41,7 @@ export default function MovieList() {
   if (loading) return <p className="text-center mt-10">Loading movies…</p>;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
+  // Calculate pagination values
   const totalPages = Math.ceil(movies.length / PAGE_SIZE);
   const paginated = movies.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
