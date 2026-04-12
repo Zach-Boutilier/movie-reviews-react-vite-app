@@ -16,7 +16,7 @@ export default function MovieDetails() {
     Promise.all([getMovie(movieId), getReviews(movieId)])
       .then(([movieData, reviewsData]) => {
         setMovie(movieData);
-        setReviews(reviewsData);
+        setReviews(reviewsData.filter((r) => r.isPublished));
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
