@@ -27,42 +27,42 @@ export default function MovieDetails() {
   if (!movie) return <p className="text-center mt-10">Movie not found.</p>;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link to="/" className="text-blue-600 hover:underline mb-4 inline-block">
+    <div className="max-w-4xl mx-auto px-4 py-10">
+      <Link to="/" className="text-blue-400 hover:text-blue-300 transition mb-6 inline-flex items-center gap-1 text-sm">
         ← Back to movies
       </Link>
 
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col md:flex-row gap-8 bg-gray-900 border border-gray-800 rounded-xl p-6">
         <img
           src={movie.imageUrl ?? "/placeholder.png"}
           alt={movie.title}
-          className="w-64 rounded-lg shadow"
+          className="w-56 md:w-64 rounded-lg shadow-lg self-start"
         />
-        <div>
-          <h1 className="text-3xl font-bold">{movie.title}</h1>
-          <p className="text-gray-500 mt-1">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold text-white">{movie.title}</h1>
+          <p className="text-gray-400 text-sm">
             {new Date(movie.releaseDate).getFullYear()} &middot; {movie.runTime}{" "}
             min
           </p>
-          <p className="mt-4">{movie.synopsis}</p>
+          <p className="mt-2 text-gray-300 leading-relaxed">{movie.synopsis}</p>
         </div>
       </div>
 
       {reviews.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-2xl font-semibold mb-4">Critic Reviews</h2>
+          <h2 className="text-2xl font-semibold mb-5 text-white">Critic Reviews</h2>
           <div className="space-y-4">
             {reviews.map((review) => (
               <div
                 key={review.id}
-                className="border rounded-lg p-4 shadow-sm"
+                className="bg-gray-900 border border-gray-800 rounded-xl p-5"
               >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium">{review.createdBy}</span>
-                  <span className="text-sm text-gray-500">⭐ {review.score} / 5</span>
+                <div className="flex justify-between items-center mb-3">
+                  <span className="font-medium text-white">{review.createdBy}</span>
+                  <span className="text-sm text-yellow-400">⭐ {review.score} / 5</span>
                 </div>
-                <h3 className="font-semibold mb-1">{review.title}</h3>
-                <p className="text-gray-700">{review.content}</p>
+                <h3 className="font-semibold text-gray-200 mb-1">{review.title}</h3>
+                <p className="text-gray-400 leading-relaxed">{review.content}</p>
               </div>
             ))}
           </div>
