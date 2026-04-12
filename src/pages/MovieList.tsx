@@ -1,16 +1,33 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getMovies } from "../api";
+import { getMovies, getReviews } from "../api";
 import type { Movie } from "../types";
 
 export default function MovieList() {
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<(Movie & { averageScore?: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     getMovies()
-      .then(setMovies)
+      .then(async (moviesData) => {
+        const moviesWithScores = await Promise.all(
+          moviesData.map(async (movie) => {
+            const reviews = await getReviews(movie.id);
+            const published = reviews.filter((r) => r.isPublished);
+            const averageScore =
+              published.length > 0
+                ? Math.round(
+                    (published.reduce((sum, r) => sum + r.score, 0) /
+                      published.length) *
+                      10
+                  ) / 10
+                : undefined;
+            return { ...movie, averageScore };
+          })
+        );
+        setMovies(moviesWithScores);
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
@@ -37,9 +54,13 @@ export default function MovieList() {
               <h2 className="text-lg font-semibold text-white group-hover:text-blue-400 transition">
                 {movie.title}
               </h2>
-              {movie.averageScore != null && (
+              {movie.averageScore != null ? (
                 <p className="text-sm text-gray-400">
                   ⭐ {movie.averageScore} / 5
+                </p>
+              ) : (
+                <p className="text-sm text-gray-500">
+                  ⭐ N/A
                 </p>
               )}
             </div>
