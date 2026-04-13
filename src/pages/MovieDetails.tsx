@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getMovie, getReviews } from "../api";
 import type { Movie, Review } from "../types";
+import { MovieDetailsSkeleton } from "../components/Skeleton";
+import StarRating from "../components/StarRating";
 
 export default function MovieDetails() {
   // Extract the movie ID from the URL parameter (e.g., /movies/3)
@@ -25,7 +27,7 @@ export default function MovieDetails() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <p className="text-center mt-10">Loading…</p>;
+  if (loading) return <MovieDetailsSkeleton />;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
   if (!movie) return <p className="text-center mt-10">Movie not found.</p>;
 
@@ -62,7 +64,7 @@ export default function MovieDetails() {
               >
                 <div className="flex justify-between items-center mb-3">
                   <span className="font-medium text-white">{review.createdBy}</span>
-                  <span className="text-sm text-yellow-400">⭐ {review.score} / 5</span>
+                  <StarRating score={review.score} />
                 </div>
                 <p className="text-gray-400 leading-relaxed">{review.content}</p>
               </div>
