@@ -11,7 +11,7 @@ function App() {
       <div className="min-h-screen flex flex-col">
         <Header />
 
-        <main className="flex-1">
+        <main className="flex-1 bg-gradient-to-b from-yellow-900/50 to-gray-950">
           {/* Client-side routing: "/" shows all movies, "/movies/:id" shows a single movie's details */}
           <Routes>
             <Route path="/" element={<MovieList />} />
